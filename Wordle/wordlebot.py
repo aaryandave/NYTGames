@@ -1,30 +1,46 @@
-wrong_letters = [letter for letter in '']
-confirmed_letters = {0: "", 1: "", 2:"", 3: "", 4: ""}
+# input gray letters as a string
+gray_letters = ''
 
-# raise donut starting words
-shift_letters = {}
-words = []
-input_dict_file = open('wordle_wordlist.txt', 'r')
-for line in input_dict_file:    
-    word = line.strip().lower().replace("'", '')
-    allow = True
-    if len(word) == 5:
-        if not any(letter in word for letter in wrong_letters):
-            if all(confirmed_letters[i] == "" or word[i] == confirmed_letters[i] for i in confirmed_letters.keys()):
-                for letter in shift_letters.keys():
-                    if not (letter in word and all(letter != word[ind] for ind in shift_letters[letter])):
-                        allow = False
-                if allow:
-                    words.append(word)
+# input green letters into the corresponding index
+green_letters = {0: "c", 1: "a", 2: "n", 3: "d", 4: ""}
 
-words.sort(reverse=True, key=lambda x: len(set(x)))
+# input yellow letters as a dictionary of all the yellow indices, like this: 
+# {'a': [0, 1, 2], 'b': [3, 4]}
+yellow_letters = {}
 
-print("Number of words: ", len(words))
-print("Best 5 words: ", words[:5])
+# load wordlist from file
+with open('./wordle_wordlist.txt', 'r') as input_dict_file:
+    words = [line.strip().lower().replace("'", '') for line in input_dict_file]
 
-# write the words to wordle_solutions.txt
+def is_valid_word(word):
+    if len(word) != 5:
+        return False
+    if any(letter in word for letter in gray_letters):
+        return False
+    if not all(green_letters[i] == "" or word[i] == green_letters[i] for i in green_letters):
+        return False
+    for letter, indices in yellow_letters.items():
+        if letter in word and any(word[ind] == letter for ind in indices):
+            return False
+    return True
+
+# filter valid words
+valid_words = [word for word in words if is_valid_word(word)]
+
+# sort by number of unique letters
+valid_words.sort(reverse=True, key=lambda x: len(set(x)))
+
+# print and write results
+num_solutions = len(valid_words)
+best_solutions = valid_words[:5]
+
+print("Number of words:", num_solutions)
+print("Best 5 words:", best_solutions)
+
 with open('wordle_solutions.txt', 'w') as output_file:
-    print("Number of solutions: ", len(words))
-    print("Best 5 solutions: ", words[:5])
-    for word in words:
+    output_file.write("Number of possible solutions: {}\n".format(num_solutions))
+    output_file.write("Best 5 solutions: {}\n".format(best_solutions))
+    for word in valid_words:
         output_file.write(word + "\n")
+
+print("Remaining solutions in wordle_wordlist.txt.")
