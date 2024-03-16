@@ -1,3 +1,0 @@
-Number of possible solutions: 1
-Best 5 solutions: ['candy']
-candy

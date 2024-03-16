@@ -2,7 +2,7 @@
 gray_letters = ''
 
 # input green letters into the corresponding index
-green_letters = {0: "c", 1: "a", 2: "n", 3: "d", 4: ""}
+green_letters = {0: "", 1: "", 2: "", 3: "", 4: ""}
 
 # input yellow letters as a dictionary of all the yellow indices, like this: 
 # {'a': [0, 1, 2], 'b': [3, 4]}
