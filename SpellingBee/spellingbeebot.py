@@ -4,7 +4,7 @@ remaining_letters.add(center_letter)
 
 valid_words = set()
 
-# Preprocess the dictionary to remove unnecessary characters
+# preprocess the dictionary to remove unnecessary characters
 with open('../../wordlist.txt', 'r') as input_dict_file:
     for line in input_dict_file:
         word = line.strip().lower()
