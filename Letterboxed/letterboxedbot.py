@@ -1,19 +1,21 @@
 from collections import defaultdict
 
 # Given lists
-lists = ['nui', 'sco', 'rat', 'jhd']
+lists = [input("Top Letters: ").strip().lower(),
+            input("Right Letters: ").strip().lower(),
+            input("Bottom Letters: ").strip().lower(),
+            input("Left Letters: ").strip().lower()]
 letterset = set(''.join(lists))
 n = 2
 wordlist = set()
 
-# Load valid words from dict.txt
+# load valid words from dict.txt
 with open('letterboxed_wordlist.txt', 'r') as input_dict_file:
     for line in input_dict_file:
         word = line.strip().lower().replace("'", '')
         if len(word) > 3 and all(letter in letterset for letter in word):
             wordlist.add(word)
 
-# Function to check if a word is valid
 def is_valid_word(word, lists):
     prev_idx = None
     for i, c in enumerate(word):
@@ -24,7 +26,7 @@ def is_valid_word(word, lists):
                 prev_idx = idx
     return True
 
-# Filter out invalid words from wordlist
+# filter out invalid words from wordlist
 valid_words = set()
 for word in wordlist:
     if is_valid_word(word, lists):
@@ -71,3 +73,5 @@ with open('letterboxed_solutions.txt', 'w') as output_file:
     output_file.write("10 longest solutions: " + str([sol[0] for sol in solutions[-10:]]) + "\n")
     for solution in solutions:
         output_file.write(solution[0] + "\n")
+
+print("Remaining solutions in letterboxed_solutions.txt.")
