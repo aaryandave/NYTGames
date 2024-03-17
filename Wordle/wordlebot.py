@@ -20,6 +20,8 @@ def is_valid_word(word):
     if not all(green_letters[i] == "" or word[i] == green_letters[i] for i in green_letters):
         return False
     for letter, indices in yellow_letters.items():
+        if letter not in word:
+            return False
         if letter in word and any(word[ind] == letter for ind in indices):
             return False
     return True
