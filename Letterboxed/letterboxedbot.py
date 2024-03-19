@@ -6,7 +6,7 @@ lists = [input("Top Letters: ").strip().lower(),
             input("Bottom Letters: ").strip().lower(),
             input("Left Letters: ").strip().lower()]
 letterset = set(''.join(lists))
-n = 2
+n = 3
 wordlist = set()
 
 # load valid words from dict.txt
