@@ -10,7 +10,6 @@ with open("quartiles_wordlist.txt") as file:
 
 results = set()
 
-# go through all combinations of 2-4 tiles without replacement and without libraries
 for tile1 in tile_set:
     word = tile1
     if word in wordlist:
