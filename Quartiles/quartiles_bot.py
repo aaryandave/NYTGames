@@ -1,8 +1,10 @@
+"""NYTGames Quartiles Solver
+"""
 tile_set = set(input("Enter the tile set space separated: ").split())
 
 wordlist = set()
 
-with open("quartiles_wordlist.txt") as file:
+with open("quartiles_wordlist.txt", encoding="utf-8") as file:
     for line in file:
         word = line.strip().lower().replace("'", "")
 
@@ -18,7 +20,7 @@ for tile1 in tile_set:
     for tile2 in tile_set:
         if tile1 == tile2:
             continue
-        
+
         word = tile1 + tile2
         if word in wordlist:
             results.add(word)
@@ -26,7 +28,7 @@ for tile1 in tile_set:
         for tile3 in tile_set:
             if tile1 == tile3 or tile2 == tile3:
                 continue
-            
+
             word = tile1 + tile2 + tile3
             if word in wordlist:
                 results.add(word)
@@ -39,6 +41,6 @@ for tile1 in tile_set:
                 if word in wordlist:
                     results.add(word)
 
-
-results = sorted(list(results), key=lambda x: len(x), reverse=True)
-print(results)
+list_results = list(results)
+list_results = sorted(list_results, key=len, reverse=True)
+print(list_results)
