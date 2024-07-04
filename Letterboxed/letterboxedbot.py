@@ -1,3 +1,5 @@
+"""NYTGames Letterboxed Solver
+"""
 from collections import defaultdict
 
 # Given lists
@@ -6,20 +8,29 @@ lists = [input("Top Letters: ").strip().lower(),
             input("Bottom Letters: ").strip().lower(),
             input("Left Letters: ").strip().lower()]
 letterset = set(''.join(lists))
-n = 3
+N = 3
 wordlist = set()
 
 # load valid words from dict.txt
-with open('letterboxed_wordlist.txt', 'r') as input_dict_file:
+with open('letterboxed_wordlist.txt', 'r', encoding="utf-8") as input_dict_file:
     for line in input_dict_file:
         word = line.strip().lower().replace("'", '')
         if len(word) > 3 and all(letter in letterset for letter in word):
             wordlist.add(word)
 
-def is_valid_word(word, lists):
+def is_valid_word(word_to_check: str, character_lists: list[str]) -> bool:
+    """Check if a word is valid given the character lists
+
+    Args:
+        word_to_check (str): The word to check
+        character_lists (list[str]): The character lists of each side
+
+    Returns:
+        bool: True if the word is valid, False otherwise
+    """
     prev_idx = None
-    for i, c in enumerate(word):
-        for idx, lst in enumerate(lists):
+    for c in word_to_check:
+        for idx, lst in enumerate(character_lists):
             if c in lst:
                 if prev_idx == idx:
                     return False
@@ -40,22 +51,32 @@ starting_letters = defaultdict(list)
 for word in wordlist:
     starting_letters[word[0]].append(word)
 
-solutions = []
-def find_solution(letterset, wordlist, solution, num_words=0):
-    if num_words > n:
-        return
-    if not letterset:
-        solutions.append((solution[:-1], num_words))
-        return
-    for word in wordlist:
-        if solution == "" or word[0] == solution[-2]:
-            new_letterset = letterset - set(word)
+solutions: list[tuple] = []
+def find_solution(given_letterset: set, given_wordlist: set[str],
+                  current_solution: str, num_words: int=0):
+    """Find a solution to the letterboxed puzzle
 
-            new_wordlist = starting_letters[word[-1]]
-            if word in new_wordlist:
-                new_wordlist.remove(word)
+    Args:
+        given_letterset (set): The set of letters
+        given_wordlist (set[str]): The set of words
+        current_solution (str): The current solution
+        num_words (int, optional): The number of words. Defaults to 0.
+    """
+    if num_words > N:
+        return
+    if not given_letterset:
+        solutions.append((current_solution[:-1], num_words))
+        return
+    for given_word in given_wordlist:
+        if current_solution == "" or given_word[0] == current_solution[-2]:
+            new_letterset = given_letterset - set(given_word)
 
-            find_solution(new_letterset, new_wordlist, solution + word + "-", num_words + 1)
+            new_wordlist = set(starting_letters[given_word[-1]])
+            if given_word in new_wordlist:
+                new_wordlist.remove(given_word)
+
+            find_solution(new_letterset, new_wordlist,
+                          current_solution + given_word + "-", num_words + 1)
 
 find_solution(letterset, wordlist, "")
 
@@ -67,7 +88,7 @@ print("Number of solutions: ", len(solutions))
 print("10 shortest solutions: ", [sol[0] for sol in solutions[:10]])
 
 # write to letterboxed_solutions.txt
-with open('letterboxed_solutions.txt', 'w') as output_file:
+with open('letterboxed_solutions.txt', 'w', encoding="utf-8") as output_file:
     output_file.write("\nNumber of solutions: " + str(len(solutions)) + "\n")
     output_file.write("10 shortest solutions: " + str([sol[0] for sol in solutions[:10]]) + "\n")
     output_file.write("10 longest solutions: " + str([sol[0] for sol in solutions[-10:]]) + "\n")
