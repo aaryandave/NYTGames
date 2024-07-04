@@ -1,28 +1,38 @@
+"""NYTGames Wordle Solver
+"""
 # input gray letters as a string
-gray_letters = ''
+GRAY_LETTERS = ''
 
 # input green letters into the corresponding index
-green_letters = {0: "", 1: "", 2: "", 3: "", 4: ""}
+GREEN_LETTERS = {0: "", 1: "", 2: "", 3: "", 4: ""}
 
-# input yellow letters as a dictionary of all the yellow indices, like this: 
+# input yellow letters as a dictionary of all the yellow indices, like this:
 # {'a': [0, 1, 2], 'b': [3, 4]}
-yellow_letters = {}
+YELLOW_LETTERS: dict[str, list[int]] = {}
 
 # load wordlist from file
-with open('./wordle_wordlist.txt', 'r') as input_dict_file:
+with open('./wordle_wordlist.txt', 'r', encoding="utf-8") as input_dict_file:
     words = [line.strip().lower().replace("'", '') for line in input_dict_file]
 
-def is_valid_word(word):
-    if len(word) != 5:
+def is_valid_word(word_to_check: str) -> bool:
+    """Check if a word is a valid Wordle guess.
+
+    Args:
+        word_to_check (str): The word to check
+
+    Returns:
+        bool: True if the word is valid, False otherwise
+    """
+    if len(word_to_check) != 5:
         return False
-    if any(letter in word for letter in gray_letters):
+    if any(letter in word_to_check for letter in GRAY_LETTERS):
         return False
-    if not all(green_letters[i] == "" or word[i] == green_letters[i] for i in green_letters):
+    if not all(letter in GREEN_LETTERS[i] for i, letter in enumerate(word_to_check)):
         return False
-    for letter, indices in yellow_letters.items():
-        if letter not in word:
+    for letter, indices in YELLOW_LETTERS.items():
+        if letter not in word_to_check:
             return False
-        if letter in word and any(word[ind] == letter for ind in indices):
+        if letter in word_to_check and any(word_to_check[ind] == letter for ind in indices):
             return False
     return True
 
@@ -39,9 +49,9 @@ best_solutions = valid_words[:5]
 print("Number of words:", num_solutions)
 print("Best 5 words:", best_solutions)
 
-with open('wordle_solutions.txt', 'w') as output_file:
-    output_file.write("Number of possible solutions: {}\n".format(num_solutions))
-    output_file.write("Best 5 solutions: {}\n".format(best_solutions))
+with open('wordle_solutions.txt', 'w', encoding="utf-8") as output_file:
+    output_file.write(f"Number of possible solutions: {num_solutions}\n")
+    output_file.write(f"Best 5 solutions: {best_solutions}\n")
     for word in valid_words:
         output_file.write(word + "\n")
 
