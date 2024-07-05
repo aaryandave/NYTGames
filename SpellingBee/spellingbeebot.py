@@ -65,7 +65,7 @@ def main():
     """Main function.
     """
     center_letter, remaining_letters = get_inputs()
-    word_list = read_words('SpeelingBee/wordlist.txt')
+    word_list = read_words('wordlist.txt')
 
     valid_words = {word for word in word_list if
                    is_valid_word(word, center_letter, remaining_letters)}
